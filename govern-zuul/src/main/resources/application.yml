@@ -1,0 +1,71 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: govern-zuul   # instance-id是每个实例的名字, application.name是每个服务的名字
+
+  security:
+    user:
+      name: admin
+      password: 123
+
+
+# ------------------------------------------------------- routes -------------------------------------------------------
+
+zuul:
+  routes:
+    # 这里是映射路径  key是服务id ,value是映射路径 ###!!甚至这段配置也可以省略  服务id等于映射路径前缀,普遍存在,zuul会自动配置
+    # 即使自己手动配置了 自动配置的也仍然生效 比如说/service-user/一样可以访问
+    #  service-user: /service-user/** 即使不配,也会生效 ,但是尽量不要使用默认配置,因为有些服务可能不想对外暴露
+    service-user: /user/**
+    service-order: /order/**
+  ignored-services:
+    "*"
+
+#通过ignored-services: 可以避免因为自动配置对外暴露服务 ,注意集合的属性配置方式 ,
+#  ignored-services:
+#    - service-user
+
+#通过ignored-services: 可以避免因为自动配置对外暴露服务 , 配置 "*"  则所有默认配置的不能用了
+#  ignored-services:
+#    "*"
+
+# ------------------------------------------------------- eureka -------------------------------------------------------
+
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    service-url:
+      defaultZone: http://admin:123@localhost:10086/eureka
+  instance:
+    instance-id: zuul  # instance-id是每个实例的名字, application.name是每个服务的名字
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+
+
+
+# ------------------------------------------------------- ribbon -------------------------------------------------------
+
+# 网关配ribbon, 比如说通过网关访问user服务,user服务有两个实例,这个时候如果不使用负载,就只会走一个
+
+ribbon:
+  ConnectTimeout: 250 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 2 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+
+
+# ------------------------------------------------------- hystrix -------------------------------------------------------
+
+# 如果触发了熔断,就会报504错误(网关超时)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 6000 # 熔断超时时长：6000ms
+

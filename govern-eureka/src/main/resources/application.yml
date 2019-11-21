@@ -1,0 +1,20 @@
+server:
+  port: 10086 # 端口
+spring:
+  application:
+    name: govern-erueka # 应用名称，会在Eureka中显示
+  security:
+    user:
+      name: admin
+      password: 123
+
+
+eureka:
+  #server:
+  # enable-self-preservation: false   #无效的服务会剔除
+  client:
+    register-with-eureka: false # 是否注册自己的信息到EurekaServer，默认是true
+    fetch-registry: false # 是否拉取其它服务的信息，默认是true
+    service-url: # EurekaServer的地址，现在是自己的地址，如果是集群，需要加上其它Server的地址。
+      defaultZone: http://admin:123@localhost:10086/eureka  # 这种写法是因为加入了security,所以注册的时候需要带上用户名密码
+

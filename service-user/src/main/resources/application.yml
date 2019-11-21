@@ -1,0 +1,72 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: service-user # 应用名
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss # 解决Date返回值的格式问题
+  datasource:
+    username: xuqiang
+    password: xq85782621.
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://118.89.165.37:3306/springcloud-demo?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml  # xml地址
+  type-aliases-package: com.meizhi.model ,com.meizhi.entity.request , com.meizhi.entity.response
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰映射
+
+#------------------------------------------ cloud ------------------------------------------
+
+
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://admin:123@localhost:10086/eureka
+  instance:
+    instance-id: servce-user
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5  # 如果现在超过了5秒的间隔（默认是90秒）
+
+
+# 如果不使用hystrix,则会在每个实例重试后发现都超时的时候抛出异常
+ribbon:
+  ConnectTimeout: 1000  # 连接超时时间(ms)
+  ReadTimeout: 2000   # 通信超时时间(ms) (重要)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数 (设置为0则代表当前服务不可用不会去找下一个服务,1则代表即使有三个实例,也只会访问两个)
+  MaxAutoRetries: 0 # 同一实例的重试次数,重试一次,实则会请求两次(包括最初请求一次和重试的一次,0则代表每个实例只会请求一次)
+
+
+feign:
+  hystrix:
+    enabled: true # 开启Feign的熔断功能
+
+hystrix:
+  command:
+    default:  # default 全局有效，service id指定应用有效
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 # 断路器超时时间，默认1000ms  这个最好大于ribbon重试所有实例所花的时间,不然可能还在重试,就突然断路了
+
+
+
+info:
+  app.name: service-user
+  company.name: meizhi
+  build.artifactId: $project.artifactId$
+  build.modelVersion: $project.modelVersion$
+
+# http://admin:123@localhost:8081/actuator/hystrix.stream  在 dashboard 可以访问这个url监控应用
+
+# 开放所有端口 , 不然dashboard无法监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

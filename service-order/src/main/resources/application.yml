@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: service-order # 应用名
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss # 解决Date返回值的格式问题
+  datasource:
+    username: xuqiang
+    password: xq85782621.
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://118.89.165.37:3306/springcloud-demo?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml  # xml地址
+  type-aliases-package: com.meizhi.model ,com.meizhi.entity.request , com.meizhi.entity.response
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰映射
+
+server:
+  port: ${PORT:9091}
+
+#eureka:
+#  client: # 客户端进行Eureka注册的配置
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://admin:123@localhost:10086/eureka
+#  instance:
+#    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+#    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+#    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+#    lease-expiration-duration-in-seconds: 5  # 如果现在超过了5秒的间隔（默认是90秒）
+
+
+eureka:
+  client:
+    service-url: # EurekaServer地址
+      defaultZone: http://admin:123@localhost:10086/eureka
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5  # 如果现在超过了5秒的间隔（默认是90秒）
+    instance-id:  ${INSTANCE_ID:service-order1}
+
+
+
+info:
+  app.name: service-order
+  company.name: meizhi
+  build.artifactId: $project.artifactId$
+  build.modelVersion: $project.modelVersion$
