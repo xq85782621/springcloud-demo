@@ -9,12 +9,20 @@ spring:
       password: 123
 
 
+
+
+# 这个是 eureka 服务端
 eureka:
-  #server:
-  # enable-self-preservation: false   #无效的服务会剔除
+  instance:
+    lease-expiration-duration-in-seconds: 10  #在这个时间内若没收到下一次心跳，则将移除该instance
+  # server 重要配置
+  server:
+    eviction-interval-timer-in-ms: 10000   # 设置清理的间隔时间，而后这个时间使用的是毫秒单位（默认是60秒）
+    enable-self-preservation: false   # 关闭自我保护,相当于只要心跳超时的服务就会被剔除,因为默认保护机制不会一超时就剔除
+
+  # 自己本身也是一个 服务
   client:
-    register-with-eureka: false # 是否注册自己的信息到EurekaServer，默认是true
-    fetch-registry: false # 是否拉取其它服务的信息，默认是true
+    register-with-eureka: false # 实例是否在eureka服务器上注册自己的信息以供其他服务发现，默认为true
+    fetch-registry: false # 此客户端是否获取eureka服务器注册表上的注册信息，默认为true
     service-url: # EurekaServer的地址，现在是自己的地址，如果是集群，需要加上其它Server的地址。
       defaultZone: http://admin:123@localhost:10086/eureka  # 这种写法是因为加入了security,所以注册的时候需要带上用户名密码
-

@@ -17,6 +17,9 @@
         <module>../service-order</module>
         <module>../govern-hystrix-dashboard</module>
         <module>../govern-zuul</module>
+        <module>../govern-config</module>
+        <module>../service-config-client</module>
+        <module>../service-demo-redis</module>
     </modules>
 
     <!--第一步务必继承springboot基础-->

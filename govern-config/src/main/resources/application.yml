@@ -1,0 +1,43 @@
+server:
+  port: 20010
+
+spring:
+  application:
+    name: govern-config
+  # 会从git上拉去配置文件,所以要配置仓库地址和用户名密码 ,要先在git上建立一个仓库用来存放配置
+  cloud:
+    config:
+      server:
+        git:
+          # 配置这个作用是 假如 service-user 这个服务进来找配置文件的时候,会去cloud-config这个仓库/service-user这个文件夹里面找
+          # 然后默认读取名称为 service-user- ?  (?是不同环境自己指定) 的配置文件
+          # 也可以配置成 /** 这样就会去仓库种所有的配置文件中去找了
+          search-paths: '{application}'
+
+          uri: https://github.com/xq85782621/springcloud-demo-config.git  # 用来存放配置文件的仓库地址
+          username: 85782621@qq.com
+          password: xq85782621.
+
+
+
+# 配置中心也需要注册到eureka中去
+eureka:
+  client:
+    service-url: # EurekaServer地址
+      defaultZone: http://admin:123@localhost:10086/eureka
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    instance-id: govern-config:${server.port}
+
+    # 设置心跳的时间间隔（默认是30秒）
+    lease-renewal-interval-in-seconds: 2
+    # Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己），默认90
+    lease-expiration-duration-in-seconds: 5
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 也可以改为"*"来暴露所有接口

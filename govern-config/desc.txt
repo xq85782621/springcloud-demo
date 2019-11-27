@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+
+
+        #  配置中心微服务
+
+        1. 也需要注册到 eureka 中, 然后启动这个微服务
+
+        2. 通过这个微服务 可以 访问到git中里的配置文件, 其它微服务加入config client依赖
+
+        3. 本质上就是其它微服务从eureka找到config server ,然后通过config server 拿到git中的配置文件
+
+
