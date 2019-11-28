@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+         # 这个服务是用来测试config配置中心的 #
+
+
+         1. 加入config client 的依赖, 测试从 配置中心 种拉取配置
+
+         2. 首先config server 要启动,  比如说 http://localhost:20010/ 这个是config server 的微服务地址
+            通过这个可以访问到github中的配置文件
+
+         3. 然后当前这个项目 在 bootstrap.yml 配置  http://localhost:20010/ 这个uri , 然后根据项目名和环境 去github 拉取配置文件
+
+         4. 如果想把每个项目的配置单独放在一个文件夹里, 需要在config server 的配置中去配置 search-paths 路径
