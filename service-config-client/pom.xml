@@ -42,5 +42,11 @@
             <artifactId>spring-cloud-config-client</artifactId>
         </dependency>
 
+        <!-- cloud-bus -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+        <!--</dependency>-->
+
     </dependencies>
 </project>

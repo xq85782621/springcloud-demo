@@ -13,6 +13,10 @@
 
         2. 通过这个微服务 可以 访问到git中里的配置文件, 其它微服务加入config client依赖
 
-        3. 本质上就是其它微服务从eureka找到config server ,然后通过config server 拿到git中的配置文件
+        3. 本质上就是其它微服务从eureka找到config server (如果开启了discovery) ,然后通过config server 拿到git中的配置文件
+
+        4. 如果想要各个微服务能动态刷新配置, 需要在把配置文件修改后, post 访问 /actuator/bus-refresh 接口. 推送消息,
+
+        5. 各个客户端需要加入 @RefreshScope 注解
 
 

@@ -7,8 +7,10 @@ spring:
   cloud:
     config:
       discovery:
-        enabled: true
-        service-id: govern-config  #config工程的工程名
+        # 这里如果变成false, 客服端取配置将直接通过uri去取, 而不会通过eureka ,去找config server ,再去找配置
+        # 如果是true, 那么该微服务将会去注册中心(eureka)去找配置中心(config server),然后再拉取配置, 为true的时候需要在 bootstrap.yml里配置eureka 的配置
+        enabled: false
+        service-id: govern-config  #config工程的工程名,为true的时候,该服务会去寻找这个config server ,然后拉取配置文件
       profile: dev
       uri: http://localhost:20010  # 配置中心的url
 
@@ -20,16 +22,19 @@ spring:
       username: admin
       password: 123
 
+  # 因为要动态刷新配置, 所以订阅者也需要 rabbitmq 的配置
+#  rabbitmq:
+#    host: localhost
+#    port: 5672    # RabbitMQ的监听端口
+#    username: guest  # 用户名
+#    password: guest # 密码
+
+
 # 在当前服务加载配置文件的时候,会同时加载 service-config-client.yml 和 service-config-client-dev.yml ,然后进行合并
 # 利用这个特性,我们可以把相同配置抽取到不带后缀的配置文件中
 
 
-
-# 为什么这里需要配eureka地址
-# 1.首先启动eureka服务
-# 2.再启动config-server 服务
-# 3.启动config-client服务的时候,会通过该配置文件(bootstrap.yml),去注册中心找到config服务的一个实例
-# 如果不在bootstrap.yml配置文件配置eureka地址,通过bootstrap.yml 根本无法把自身注册到eureka中,当然也就找不到config实例了
+# 当 discovery  enabled 为 true 的时候, 这里要配置 eureka 地址
 eureka:
   client:
     service-url: # EurekaServer地址

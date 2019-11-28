@@ -16,3 +16,8 @@
          3. 然后当前这个项目 在 bootstrap.yml 配置  http://localhost:20010/ 这个uri , 然后根据项目名和环境 去github 拉取配置文件
 
          4. 如果想把每个项目的配置单独放在一个文件夹里, 需要在config server 的配置中去配置 search-paths 路径
+
+
+         5.各个微服务想要去配置中心拉取配置 有两种方式,
+            1. 是不通过eureka,直接通过配置中心(配置uri) config server 去找配置
+            2. 通过eureka 去找config server 服务, 然后再去拿配置
